@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Choices 💕</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: Arial;
+        background: linear-gradient(135deg, #ffe4ec, #fffaf5);
+        overflow: hidden;
+    }
+
+    .card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fffaf5;
+        padding: 30px;
+        border-radius: 20px;
+        width: 360px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        color: #d63384;
+    }
+
+    .option {
+        display: block;
+        margin: 10px auto;
+        padding: 10px;
+        width: 80%;
+        border: none;
+        border-radius: 12px;
+        background: #f7d6e0;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #ffb6c1;
+        color: white;
+    }
+
+    /* popup */
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        display: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        width: 300px;
+        z-index: 10;
+    }
+
+    .popup button {
+        margin: 10px;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    #okBtn {
+        background: #ffb6c1;
+    }
+
+    #notOkBtn {
+        background: #f7d6e0;
+        position: relative;
+    }
+
+    #fineBtn {
+        background: #ffd6e0;
+    }
+
+    .loading-container{
+    width:100%;
+    height:18px;
+    background:#ffe5ee;
+    border-radius:20px;
+    overflow:hidden;
+    margin:20px 0;
+}
+
+.loading-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#ff7bac,#ffb6c1);
+    transition:width .05s linear;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>What do you want to do? 💕</h2>
+
+    <button class="option" onclick="handleChoice(this)">Cuddle with me 🤗</button>
+    <button class="option" onclick="handleChoice(this)">Continue watching Avatar 🎬</button>
+    <button class="option" onclick="handleChoice(this)">Discuss Proverbs 📖</button>
+    <button class="option" onclick="handleChoice(this)">Play games 🎮</button>
+</div>
+
+<!-- Popup -->
+<div class="popup" id="popup">
+    <p id="popupText"></p>
+
+    <button id="okBtn" onclick="goNext()">I'm ok with this</button>
+    <button id="notOkBtn">I'm not ok</button>
+
+    <button id="fineBtn" style="display:none;">Fine papi 😌</button>
+</div>
+<script>
+let choices = [];
+let popup = document.getElementById("popup");
+let text = document.getElementById("popupText");
+
+let okBtn = document.getElementById("okBtn");
+let notOkBtn = document.getElementById("notOkBtn");
+let fineBtn = document.getElementById("fineBtn");
+
+let round = 1;
+
+// runaway button
+notOkBtn.style.transition="all .35s ease";
+
+notOkBtn.addEventListener("mouseover",()=>{
+
+    const x=Math.random()*220-110;
+    const y=Math.random()*120-60;
+
+    notOkBtn.style.transform=`translate(${x}px,${y}px)`;
+
+});
+
+// MAIN HANDLER
+function handleChoice(btn) {
+
+    let choice = btn.innerText;
+
+    // ROUND 2 FINAL DECISION STATE
+    if (choices.length === 1) {
+
+        // SECOND CLICK
+        if (choice.includes("Cuddle")) {
+            text.innerHTML = "My love I know you love me 😏🔥 but you have to choose another 😁";
+            showPopup("retry");
+            return;
+        } 
+        else {
+            choices.push(choice);
+            text.innerHTML = "You chose " + choice + " 😌🔥";
+            showPopup("final");
+            return;
+        }
+    }
+
+    // ROUND 1 FIRST CLICK LOGIC
+    if (choices.length === 0) {
+
+        if (choice.includes("Cuddle")) {
+            choices.push("Cuddle");
+            text.innerHTML = "That’s my bonita 😏🔥😍 my hands are ready";
+            showPopup("retry");
+        } 
+        else {
+            choices.push(choice);
+            text.innerHTML = "Yay you chose Cuddle 🤗😂 select another";
+            showPopup("retry");
+        }
+    }
+}
+
+// popup controller
+function showPopup(type) {
+    popup.style.display = "block";
+
+    okBtn.style.display = "none";
+    notOkBtn.style.display = "none";
+    fineBtn.style.display = "none";
+
+    // ROUND 1 / retry state
+    if (type === "retry") {
+        fineBtn.style.display = "inline-block";
+        fineBtn.innerText = "Choose another 💕";
+    }
+
+    // FINAL STATE (ROUND 2 result)
+    if (type === "final") {
+        okBtn.style.display = "inline-block";
+        notOkBtn.style.display = "inline-block";
+    }
+}
+
+// close retry popup
+fineBtn.onclick = () => {
+    popup.style.display = "none";
+};
+
+// FINAL BUTTONS
+okBtn.onclick = () => {
+
+    // Save activities for Page 3
+    localStorage.setItem("choice1","🤗 Cuddle with me");
+
+    // second activity selected
+    localStorage.setItem("choice2",choices[1]);
+
+    popup.innerHTML=`
+
+        <h2 style="color:#d63384;">
+            💕 Preparing our Friday night...
+        </h2>
+
+        <div class="loading-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+
+        <p id="loadingText">
+            Packing unlimited cuddles... 🤗
+        </p>
+
+    `;
+
+    const loadingBar=document.getElementById("loadingBar");
+    const loadingText=document.getElementById("loadingText");
+
+    const messages=[
+
+        "Packing unlimited cuddles... 🤗",
+
+        "Fluffing the pillows... 🛋️",
+
+        "Getting Avatar ready... 🍿",
+
+        "Charging the controllers... 🎮",
+
+        "Making sure you're smiling... 😊",
+
+        "Almost ready... ❤️"
+
+    ];
+
+    let progress=0;
+    let messageIndex=0;
+
+    const interval=setInterval(()=>{
+
+        progress++;
+
+        loadingBar.style.width=progress+"%";
+
+        if(progress%20===0 && messageIndex<messages.length-1){
+
+            messageIndex++;
+            loadingText.innerHTML=messages[messageIndex];
+
+        }
+
+        if(progress>=100){
+
+            clearInterval(interval);
+
+            setTimeout(()=>{
+
+                window.location.href="page3.html";
+
+            },500);
+
+        }
+
+    },35);
+
+};
+
+notOkBtn.onclick = () => {
+    // do nothing (runs away via hover)
+};
+</script>
+</body>
+</html>

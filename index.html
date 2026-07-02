@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You 💖</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    height:100vh;
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-family:'Segoe UI',sans-serif;
+
+    background:linear-gradient(135deg,#ffd6e8,#fff8f2);
+
+}
+
+.card{
+
+    width:430px;
+
+    background:rgba(255,255,255,.45);
+
+    backdrop-filter:blur(18px);
+
+    padding:45px;
+
+    border-radius:28px;
+
+    text-align:center;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+    animation:fadeUp .9s ease;
+
+    z-index:5;
+
+}
+
+h2{
+
+    color:#d63384;
+
+    line-height:1.5;
+
+    margin-bottom:35px;
+
+    font-size:30px;
+
+}
+
+.btn{
+
+    padding:14px 35px;
+
+    margin:12px;
+
+    border:none;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    transition:.3s;
+
+}
+
+#yesBtn{
+
+    background:#ff77a9;
+    color:white;
+
+}
+
+#yesBtn:hover{
+
+    transform:scale(1.08);
+
+    box-shadow:0 10px 20px rgba(255,105,180,.3);
+
+}
+
+#noBtn{
+
+    background:#fff;
+
+    color:#555;
+
+    position:absolute;
+
+    transition:all .35s ease;
+
+}
+
+.heart{
+
+    position:absolute;
+
+    bottom:-40px;
+
+    font-size:25px;
+
+    animation:float 8s linear infinite;
+
+    opacity:.75;
+
+}
+
+@keyframes float{
+
+    to{
+
+        transform:translateY(-120vh);
+
+        opacity:0;
+
+    }
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Do you want to spend Friday night with me (tomorrow)? 💕</h2>
+
+    <button id="yesBtn" class="btn">Yes</button>
+    <button id="noBtn" class="btn">No</button>
+</div>
+
+<script>
+const noBtn=document.getElementById("noBtn");
+const yesBtn=document.getElementById("yesBtn");
+
+// Floating hearts
+function createHeart(){
+
+    const heart=document.createElement("div");
+
+    heart.className="heart";
+
+    heart.innerHTML="💕";
+
+    heart.style.left=Math.random()*100+"vw";
+
+    heart.style.fontSize=(18+Math.random()*18)+"px";
+
+    heart.style.animationDuration=(5+Math.random()*5)+"s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(),9000);
+
+}
+
+setInterval(createHeart,500);
+
+
+// Smooth runaway button
+
+noBtn.addEventListener("mouseover",()=>{
+
+    const x=Math.random()*(window.innerWidth-160);
+
+    const y=Math.random()*(window.innerHeight-80);
+
+    noBtn.style.left=x+"px";
+
+    noBtn.style.top=y+"px";
+
+});
+
+
+// YES BUTTON
+
+yesBtn.addEventListener("click",()=>{
+
+document.body.innerHTML=`
+
+<div id="transition"
+
+style="
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+background:linear-gradient(135deg,#ffd6e8,#fff8f2);
+
+opacity:0;
+
+transition:opacity .8s;
+
+font-family:'Segoe UI';
+
+">
+
+<h1
+
+style="
+
+color:#d63384;
+
+margin-bottom:25px;
+
+">
+
+I knew you wouldn't say no 😂💕
+
+</h1>
+
+<div
+
+style="
+
+width:320px;
+
+height:18px;
+
+background:#ffe4ef;
+
+border-radius:30px;
+
+overflow:hidden;
+
+">
+
+<div
+
+id="bar"
+
+style="
+
+width:0%;
+
+height:100%;
+
+background:linear-gradient(90deg,#ff6fa5,#ffb6c1);
+
+">
+
+</div>
+
+</div>
+
+<p
+
+id="loadingText"
+
+style="
+
+margin-top:25px;
+
+font-size:18px;
+
+color:#555;
+
+">
+
+Getting everything ready... 💕
+
+</p>
+
+</div>
+
+`;
+
+const transition=document.getElementById("transition");
+
+const bar=document.getElementById("bar");
+
+const loadingText=document.getElementById("loadingText");
+
+setTimeout(()=>{
+
+transition.style.opacity="1";
+
+},50);
+
+const messages=[
+
+"Getting everything ready... 💕",
+
+"Making room for cuddles... 🤗",
+
+"Adding extra happiness... 🌸",
+
+"Saving your seat... 💖",
+
+"Almost there... ❤️"
+
+];
+
+let progress=0;
+
+let msg=0;
+
+const load=setInterval(()=>{
+
+progress++;
+
+bar.style.width=progress+"%";
+
+if(progress%25===0 && msg<messages.length-1){
+
+msg++;
+
+loadingText.innerHTML=messages[msg];
+
+}
+
+if(progress>=100){
+
+clearInterval(load);
+
+transition.style.opacity="0";
+
+setTimeout(()=>{
+
+window.location.href="page2.html";
+
+},800);
+
+}
+
+},35);
+
+});
+</script>
+
+</body>
+</html>

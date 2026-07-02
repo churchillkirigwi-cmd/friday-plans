@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Friday Night 💕</title>
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+body{
+
+background:linear-gradient(135deg,#ffe4ec,#fffaf5);
+font-family:Arial,Helvetica,sans-serif;
+overflow-x:hidden;
+min-height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+}
+
+.card{
+
+width:700px;
+max-width:90%;
+
+background:white;
+
+padding:40px;
+
+border-radius:25px;
+
+box-shadow:0 10px 40px rgba(0,0,0,.1);
+
+text-align:center;
+
+}
+
+h1{
+
+color:#d63384;
+margin-bottom:20px;
+
+}
+
+.typewriter{
+
+font-size:22px;
+
+min-height:60px;
+
+color:#444;
+
+margin-bottom:30px;
+
+}
+
+button{
+
+margin-top:30px;
+
+padding:15px 35px;
+
+background:#ff8fb1;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-size:18px;
+
+color:white;
+
+}
+
+button:hover{
+
+transform:scale(1.05);
+
+}
+
+.plan{
+
+margin-top:35px;
+
+display:none;
+
+text-align:left;
+
+font-size:22px;
+
+line-height:2.3;
+
+}
+
+.activity{
+
+opacity:0;
+
+transform:translateY(20px);
+
+transition:.6s;
+
+}
+
+.show{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+.message{
+
+display:none;
+
+margin-top:40px;
+
+font-size:20px;
+
+line-height:1.8;
+
+color:#444;
+
+}
+
+.heart{
+
+position:fixed;
+
+bottom:-30px;
+
+font-size:25px;
+
+animation:float 7s linear infinite;
+
+opacity:.8;
+
+}
+
+@keyframes float{
+
+to{
+
+transform:translateY(-120vh);
+
+opacity:0;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>💕 Friday Night Confirmed 💕</h1>
+
+<div class="typewriter" id="typing"></div>
+
+<button id="planBtn" style="display:none;">View Tonight's Plan</button>
+
+<div class="plan" id="plan"></div>
+
+<div class="message" id="message">
+
+<h2>❤️ Dear Bonita ❤️</h2>
+
+<br>
+
+Thank you for agreeing to spend Friday night with me😂😂😂.
+
+<br><br>
+
+Whether we're cuddling, laughing, watching Avatar or discussing Proverbs...
+
+the best part is simply spending time with you.
+
+<br><br>
+
+I love you so much and I can't wait to see you tomorrow. 😘
+
+<br><br>
+
+Be a good girl and warm me up ok😁❤️
+
+</div>
+
+</div>
+
+<script>
+
+const text="Your Friday Night has officially been confirmed ❤️";
+
+const typing=document.getElementById("typing");
+
+let i=0;
+
+function type(){
+
+if(i<text.length){
+
+typing.innerHTML+=text.charAt(i);
+
+i++;
+
+setTimeout(type,50);
+
+}
+else{
+
+document.getElementById("planBtn").style.display="inline-block";
+
+}
+
+}
+
+type();
+
+function heart(){
+
+const h=document.createElement("div");
+
+h.className="heart";
+
+h.innerHTML="💕";
+
+h.style.left=Math.random()*100+"vw";
+
+h.style.animationDuration=(5+Math.random()*4)+"s";
+
+document.body.appendChild(h);
+
+setTimeout(()=>h.remove(),8000);
+
+}
+
+setInterval(heart,400);
+
+document.getElementById("planBtn").onclick=function(){
+
+this.style.display="none";
+
+const plan=document.getElementById("plan");
+
+plan.style.display="block";
+
+const c1=localStorage.getItem("choice1");
+
+const c2=localStorage.getItem("choice2");
+
+const activities=[];
+
+activities.push("🤗 Cuddle with Churchill");
+
+activities.push(c2);
+
+activities.forEach((item,index)=>{
+
+setTimeout(()=>{
+
+const div=document.createElement("div");
+
+div.className="activity";
+
+div.innerHTML=item;
+
+plan.appendChild(div);
+
+setTimeout(()=>div.classList.add("show"),50);
+
+},index*1200);
+
+});
+
+setTimeout(()=>{
+
+document.getElementById("message").style.display="block";
+
+},3200);
+
+};
+
+</script>
+
+</body>
+
+</html>
