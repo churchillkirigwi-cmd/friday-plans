@@ -3,152 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <title>For You 💖</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
 body{
-
     height:100vh;
     overflow:hidden;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
-    font-family:'Segoe UI',sans-serif;
-
     background:linear-gradient(135deg,#ffd6e8,#fff8f2);
-
 }
 
+/* CARD */
 .card{
-
-    width:430px;
-
-    background:rgba(255,255,255,.45);
-
-    backdrop-filter:blur(18px);
-
+    width:420px;
+    background:rgba(255,255,255,0.55);
+    backdrop-filter:blur(15px);
     padding:45px;
-
-    border-radius:28px;
-
+    border-radius:25px;
     text-align:center;
-
-    box-shadow:0 15px 40px rgba(0,0,0,.12);
-
-    animation:fadeUp .9s ease;
-
-    z-index:5;
-
+    box-shadow:0 15px 40px rgba(0,0,0,0.15);
 }
 
 h2{
-
     color:#d63384;
-
-    line-height:1.5;
-
-    margin-bottom:35px;
-
-    font-size:30px;
-
+    font-size:28px;
+    margin-bottom:30px;
+    line-height:1.4;
 }
 
+/* BUTTON */
 .btn{
-
     padding:14px 35px;
-
-    margin:12px;
-
     border:none;
-
     border-radius:30px;
-
-    cursor:pointer;
-
     font-size:18px;
-
+    cursor:pointer;
     transition:.3s;
-
 }
 
 #yesBtn{
-
-    background:#ff77a9;
+    background:#ff6fa5;
     color:white;
-
 }
 
 #yesBtn:hover{
-
     transform:scale(1.08);
-
-    box-shadow:0 10px 20px rgba(255,105,180,.3);
-
 }
 
+/* NO BUTTON */
 #noBtn{
-
-    background:#fff;
-
-    color:#555;
-
-    position:absolute;
-
-    transition:all .35s ease;
-
+    background:white;
+    color:#444;
+    position:fixed;
+    transition:left .2s ease, top .2s ease;
+    z-index:5;
 }
 
-.heart{
-
-    position:absolute;
-
-    bottom:-40px;
-
-    font-size:25px;
-
-    animation:float 8s linear infinite;
-
-    opacity:.75;
-
+/* LOADING */
+.loading-container{
+    width:300px;
+    height:16px;
+    background:#ffe4ef;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:20px;
 }
 
-@keyframes float{
-
-    to{
-
-        transform:translateY(-120vh);
-
-        opacity:0;
-
-    }
-
+.loading-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#ff6fa5,#ffb6c1);
 }
 
-@keyframes fadeUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(40px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}
 </style>
 </head>
 
@@ -158,201 +97,134 @@ h2{
     <h2>Do you want to spend Friday night with me (tomorrow)? 💕</h2>
 
     <button id="yesBtn" class="btn">Yes</button>
-    <button id="noBtn" class="btn">No</button>
 </div>
 
+<button id="noBtn" class="btn">No</button>
+
 <script>
-const noBtn=document.getElementById("noBtn");
+
 const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
 
-// Floating hearts
-function createHeart(){
+/* =========================
+   POSITION NO BUTTON NEXT TO YES
+========================= */
+window.addEventListener("load", () => {
 
-    const heart=document.createElement("div");
+    const yesRect = yesBtn.getBoundingClientRect();
 
-    heart.className="heart";
+    noBtn.style.left = (yesRect.right + 20) + "px";
+    noBtn.style.top = (yesRect.top + yesRect.height / 2) + "px";
+});
 
-    heart.innerHTML="💕";
+/* =========================
+   NO BUTTON RUN AWAY (SAFE)
+========================= */
+document.addEventListener("mousemove",(e)=>{
 
-    heart.style.left=Math.random()*100+"vw";
+    const rect=noBtn.getBoundingClientRect();
 
-    heart.style.fontSize=(18+Math.random()*18)+"px";
+    const btnX=rect.left + rect.width/2;
+    const btnY=rect.top + rect.height/2;
 
-    heart.style.animationDuration=(5+Math.random()*5)+"s";
+    const dx=btnX - e.clientX;
+    const dy=btnY - e.clientY;
 
-    document.body.appendChild(heart);
+    const distance=Math.sqrt(dx*dx + dy*dy);
 
-    setTimeout(()=>heart.remove(),9000);
+    if(distance < 140){
 
-}
+        const moveX = dx / distance;
+        const moveY = dy / distance;
 
-setInterval(createHeart,500);
+        const escape = 110;
 
+        let x = rect.left + moveX * escape;
+        let y = rect.top + moveY * escape;
 
-// Smooth runaway button
+        const padding = 15;
 
-noBtn.addEventListener("mouseover",()=>{
+        const maxX = window.innerWidth - rect.width - padding;
+        const maxY = window.innerHeight - rect.height - padding;
 
-    const x=Math.random()*(window.innerWidth-160);
+        x = Math.max(padding, Math.min(maxX, x));
+        y = Math.max(padding, Math.min(maxY, y));
 
-    const y=Math.random()*(window.innerHeight-80);
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
 
-    noBtn.style.left=x+"px";
-
-    noBtn.style.top=y+"px";
+        noBtn.style.position = "fixed";
+    }
 
 });
 
 
-// YES BUTTON
-
+/* =========================
+   YES BUTTON TRANSITION
+========================= */
 yesBtn.addEventListener("click",()=>{
 
 document.body.innerHTML=`
 
-<div id="transition"
-
+<div id="loadScreen"
 style="
-
 height:100vh;
-
 display:flex;
-
 justify-content:center;
-
 align-items:center;
-
 flex-direction:column;
-
 background:linear-gradient(135deg,#ffd6e8,#fff8f2);
-
 opacity:0;
-
 transition:opacity .8s;
-
-font-family:'Segoe UI';
-
 ">
 
-<h1
-
-style="
-
-color:#d63384;
-
-margin-bottom:25px;
-
-">
-
+<h1 style="color:#d63384;margin-bottom:20px;">
 I knew you wouldn't say no 😂💕
-
 </h1>
 
-<div
-
-style="
-
-width:320px;
-
-height:18px;
-
-background:#ffe4ef;
-
-border-radius:30px;
-
-overflow:hidden;
-
-">
-
-<div
-
-id="bar"
-
-style="
-
-width:0%;
-
-height:100%;
-
-background:linear-gradient(90deg,#ff6fa5,#ffb6c1);
-
-">
-
+<div class="loading-container">
+    <div class="loading-bar" id="bar"></div>
 </div>
 
-</div>
-
-<p
-
-id="loadingText"
-
-style="
-
-margin-top:25px;
-
-font-size:18px;
-
-color:#555;
-
-">
-
+<p id="text" style="margin-top:20px;color:#555;">
 Getting everything ready... 💕
-
 </p>
 
 </div>
 
 `;
 
-const transition=document.getElementById("transition");
-
+const screen=document.getElementById("loadScreen");
 const bar=document.getElementById("bar");
+const text=document.getElementById("text");
 
-const loadingText=document.getElementById("loadingText");
-
-setTimeout(()=>{
-
-transition.style.opacity="1";
-
-},50);
+setTimeout(()=>screen.style.opacity="1",50);
 
 const messages=[
-
 "Getting everything ready... 💕",
-
-"Making room for cuddles... 🤗",
-
-"Adding extra happiness... 🌸",
-
-"Saving your seat... 💖",
-
+"Preparing surprises... 🎁",
+"Making it special... 🌸",
 "Almost there... ❤️"
-
 ];
 
 let progress=0;
-
 let msg=0;
 
 const load=setInterval(()=>{
 
 progress++;
-
 bar.style.width=progress+"%";
 
 if(progress%25===0 && msg<messages.length-1){
-
 msg++;
-
-loadingText.innerHTML=messages[msg];
-
+text.innerHTML=messages[msg];
 }
 
 if(progress>=100){
 
 clearInterval(load);
 
-transition.style.opacity="0";
+screen.style.opacity="0";
 
 setTimeout(()=>{
 
@@ -362,9 +234,10 @@ window.location.href="page2.html";
 
 }
 
-},35);
+},30);
 
 });
+
 </script>
 
 </body>
